@@ -31,6 +31,7 @@ class File_cloud_class {
 	}
 
 	async do_save_image(params) {
+		var _this = this;
 		var name = (params.name || 'Artwork').trim();
 		var type = (params.type || 'PNG').toUpperCase();
 		var quality = Math.max(1, Math.min(100, parseInt(params.quality) || 90)) / 100;
@@ -128,6 +129,7 @@ class File_cloud_class {
 	}
 
 	async do_save_project(params) {
+		var _this = this;
 		var name = (params.name || 'GIMPLab_Project').trim();
 		try {
 			alertify.message('Packaging project layers...');
@@ -165,6 +167,20 @@ class File_cloud_class {
 			}
 
 			alertify.success('Project saved to Cloud successfully!');
+			
+			_this.POP.show({
+				title: 'Project Upload Complete',
+				params: [
+					{
+						title: '',
+						html: '<div style="padding:10px;text-align:center;">'
+							+ '<p style="color:#4ade80;font-weight:bold;margin-bottom:12px;">Layered project saved to S3 successfully!</p>'
+							+ '<input type="text" readonly value="' + publicUrl + '" style="width:100%;padding:8px;background:#18181b;color:#e4e4e7;border:1px solid #3f3f46;border-radius:6px;font-size:12px;margin-bottom:12px;" onclick="this.select()" />'
+							+ '<p style="color:#94a3b8;font-size:12px;">You can reopen this project with all layers intact using "Open from Cloud...".</p>'
+							+ '</div>'
+					}
+				]
+			});
 		} catch (err) {
 			console.error('Save project error:', err);
 			alertify.error('Failed to save project: ' + err.message);
