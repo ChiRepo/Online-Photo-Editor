@@ -15,7 +15,7 @@ var instance = null;
 /** 
  * manages files / save
  * 
- * @author ViliusL
+ * @author GIMP Lab Team
  */
 class File_save_class {
 	
@@ -666,8 +666,7 @@ class File_save_class {
 		export_data.info = {
 			width: config.WIDTH,
 			height: config.HEIGHT,
-			about: 'Image data with multi-layers. Can be opened using miniPaint - '
-				+ 'https://github.com/viliusle/miniPaint',
+			about: 'GIMP Lab - Professional Web Photo & Graphics Editor project data',
 			date: today,
 			version: VERSION,
 			layer_active: config.layer.id,

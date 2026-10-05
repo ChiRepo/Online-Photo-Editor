@@ -5,7 +5,7 @@ import File_open_class from './open.js';
 /** 
  * manages files / quick-load
  * 
- * @author ViliusL
+ * @author GIMP Lab Team
  */
 class File_quickload_class {
 

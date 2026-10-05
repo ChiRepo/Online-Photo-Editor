@@ -1,5 +1,5 @@
 /*
- * miniPaint - https://github.com/viliusle/miniPaint
+ * GIMP Lab - https://gimplab.pro
  * author: Vilius L.
  */
 

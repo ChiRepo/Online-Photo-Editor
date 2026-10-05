@@ -6,7 +6,7 @@ import alertify from './../../../../node_modules/alertifyjs/build/alertify.min.j
 /** 
  * manages files / quick-save
  * 
- * @author ViliusL
+ * @author GIMP Lab Team
  */
 class File_quicksave_class {
 

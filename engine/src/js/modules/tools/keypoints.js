@@ -8,7 +8,7 @@ import alertify from './../../../../node_modules/alertifyjs/build/alertify.min.j
 /**
  * SIFT: scale-invariant-feature-transform, keypoints
  * 
- * @author ViliusL
+ * @author GIMP Lab Team
  */
 class Tools_keypoints_class {
 

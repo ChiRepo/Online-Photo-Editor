@@ -4,7 +4,7 @@ import ImageFilters from './imagefilters.js';
 /**
  * adds vintage effect
  * 
- * @author ViliusL
+ * @author GIMP Lab Team
  * 
  * Functions:
  * - adjust_color

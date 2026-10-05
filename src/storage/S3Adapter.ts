@@ -32,11 +32,38 @@ export class S3StorageAdapter implements StorageAdapter {
   }
 
   async download(key: string): Promise<Blob> {
-    throw new Error('Direct download is not supported for S3. Use getDownloadUrl() instead.');
+    const command = new GetObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+    });
+    const res = await this.client.send(command);
+    const bytes = await res.Body?.transformToByteArray();
+    return new Blob([Buffer.from(bytes || [])]);
   }
 
-  async upload(key: string, file: File | Blob): Promise<void> {
-    throw new Error('Direct upload is not supported for S3. Use getUploadUrl() instead.');
+  async upload(key: string, data: any, contentType: string = 'application/octet-stream'): Promise<string> {
+    let bodyBuffer: Buffer;
+    if (Buffer.isBuffer(data)) {
+      bodyBuffer = data;
+    } else if (data instanceof Uint8Array) {
+      bodyBuffer = Buffer.from(data);
+    } else if (typeof data?.arrayBuffer === 'function') {
+      const ab = await data.arrayBuffer();
+      bodyBuffer = Buffer.from(ab);
+    } else if (typeof data === 'string') {
+      bodyBuffer = Buffer.from(data, 'utf-8');
+    } else {
+      bodyBuffer = Buffer.from(String(data));
+    }
+
+    const command = new PutObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+      Body: bodyBuffer,
+      ContentType: contentType,
+    });
+    await this.client.send(command);
+    return `https://${this.bucket}.s3.${process.env.AWS_REGION || 'ap-south-1'}.amazonaws.com/${key}`;
   }
 
   async delete(key: string): Promise<void> {

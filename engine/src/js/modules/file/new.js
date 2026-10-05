@@ -9,7 +9,7 @@ import Tools_settings_class from './../tools/settings.js';
 /** 
  * manages files / new
  * 
- * @author ViliusL
+ * @author GIMP Lab Team
  */
 class File_new_class {
 

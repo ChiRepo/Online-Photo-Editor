@@ -1,7 +1,7 @@
 /** 
  * manages files / print
  * 
- * @author ViliusL
+ * @author GIMP Lab Team
  */
 class File_print_class {
 

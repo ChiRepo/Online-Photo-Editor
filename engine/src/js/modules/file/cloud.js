@@ -16,10 +16,11 @@ class File_cloud_class {
 
 	save_image() {
 		var _this = this;
+		var defaultName = 'Artwork_' + new Date().toISOString().slice(0, 10).replace(/-/g, '');
 		var settings = {
-			title: 'Save Image to Cloud (S3)',
+			title: 'Save Image to Cloud (AWS S3)',
 			params: [
-				{ name: 'name', title: 'File name:', value: 'Artwork_' + Date.now() },
+				{ name: 'name', title: 'File name:', value: defaultName },
 				{ name: 'type', title: 'Format:', value: 'PNG', values: ['PNG', 'JPG', 'WEBP'] },
 				{ name: 'quality', title: 'Quality (1-100):', value: 90 },
 			],
@@ -32,7 +33,7 @@ class File_cloud_class {
 
 	async do_save_image(params) {
 		var _this = this;
-		var name = (params.name || 'Artwork').trim();
+		var name = (params.name || 'Artwork').trim().replace(/[^a-zA-Z0-9_\-]/g, '_');
 		var type = (params.type || 'PNG').toUpperCase();
 		var quality = Math.max(1, Math.min(100, parseInt(params.quality) || 90)) / 100;
 		var ext = type.toLowerCase();
@@ -46,12 +47,14 @@ class File_cloud_class {
 		tempCanvas.height = config.HEIGHT;
 		var ctx = tempCanvas.getContext('2d');
 
+		this.Base_layers.convert_layers_to_canvas(ctx, null, false);
+
 		if (!config.TRANSPARENCY || type === 'JPG') {
+			ctx.globalCompositeOperation = 'destination-over';
 			ctx.fillStyle = '#ffffff';
 			ctx.fillRect(0, 0, config.WIDTH, config.HEIGHT);
+			ctx.globalCompositeOperation = 'source-over';
 		}
-
-		app.Layers.convert_layers_to_canvas(ctx, null, false);
 
 		tempCanvas.toBlob(async function (blob) {
 			if (!blob) {
@@ -60,38 +63,62 @@ class File_cloud_class {
 			}
 
 			try {
-				alertify.message('Requesting S3 Presigned URL...');
-				var uploadRes = await fetch('/api/storage/upload-url', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						fileName: name + '.' + ext,
-						fileType: mimeType,
-						folder: 'projects',
-					}),
-				});
+				alertify.message('Uploading directly to AWS S3...');
+				var publicUrl = null;
+				var fullFileName = name + '.' + ext;
 
-				if (!uploadRes.ok) {
-					throw new Error('Server returned ' + uploadRes.status);
+				// Task B: Direct multipart form backend upload stream
+				try {
+					var formData = new FormData();
+					formData.append('file', blob, fullFileName);
+					formData.append('fileName', fullFileName);
+					formData.append('folder', 'projects');
+
+					var uploadRes = await fetch('/api/storage/upload', {
+						method: 'POST',
+						body: formData,
+					});
+
+					if (uploadRes.ok) {
+						var data = await uploadRes.json();
+						publicUrl = data.url;
+					}
+				} catch (uploadErr) {
+					console.warn('Direct upload stream failed, attempting presigned URL fallback:', uploadErr);
 				}
 
-				var data = await uploadRes.json();
-				var uploadUrl = data.uploadUrl;
-				var publicUrl = data.publicUrl;
+				// Task C fallback: Presigned URL PUT
+				if (!publicUrl) {
+					alertify.message('Requesting S3 Presigned URL...');
+					var presignRes = await fetch('/api/storage/upload-url', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({
+							fileName: fullFileName,
+							fileType: mimeType,
+							folder: 'projects',
+						}),
+					});
 
-				alertify.message('Uploading to AWS S3...');
-				var putRes = await fetch(uploadUrl, {
-					method: 'PUT',
-					headers: { 'Content-Type': mimeType },
-					body: blob,
-				});
+					if (!presignRes.ok) {
+						throw new Error('Presigned URL request failed with status ' + presignRes.status);
+					}
 
-				if (!putRes.ok) {
-					throw new Error('S3 upload failed with status ' + putRes.status);
+					var presignData = await presignRes.json();
+					var putRes = await fetch(presignData.uploadUrl, {
+						method: 'PUT',
+						headers: { 'Content-Type': mimeType },
+						body: blob,
+					});
+
+					if (!putRes.ok) {
+						throw new Error('S3 direct PUT failed with status ' + putRes.status);
+					}
+					publicUrl = presignData.publicUrl;
 				}
 
 				alertify.success('Saved successfully to S3!');
-				
+
 				// Show dialog with shareable public link
 				_this.POP.show({
 					title: 'Cloud Upload Complete',
@@ -116,10 +143,11 @@ class File_cloud_class {
 
 	save_project() {
 		var _this = this;
+		var defaultName = 'Project_' + new Date().toISOString().slice(0, 10).replace(/-/g, '');
 		var settings = {
-			title: 'Save Layered Project to Cloud',
+			title: 'Save Layered Project to Cloud (AWS S3)',
 			params: [
-				{ name: 'name', title: 'Project name:', value: 'GIMPLab_Project_' + Date.now() },
+				{ name: 'name', title: 'Project name:', value: defaultName },
 			],
 			on_finish: function (params) {
 				_this.do_save_project(params);
@@ -130,40 +158,64 @@ class File_cloud_class {
 
 	async do_save_project(params) {
 		var _this = this;
-		var name = (params.name || 'GIMPLab_Project').trim();
+		var name = (params.name || 'GIMPLab_Project').trim().replace(/[^a-zA-Z0-9_\-]/g, '_');
+		var fullFileName = name + '.json';
+
 		try {
 			alertify.message('Packaging project layers...');
 			var jsonString = app.FileSave.export_as_json();
 			var blob = new Blob([jsonString], { type: 'application/json' });
 
-			alertify.message('Requesting S3 Presigned URL...');
-			var uploadRes = await fetch('/api/storage/upload-url', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					fileName: name + '.json',
-					fileType: 'application/json',
-					folder: 'projects',
-				}),
-			});
+			alertify.message('Uploading project to AWS S3...');
+			var publicUrl = null;
 
-			if (!uploadRes.ok) {
-				throw new Error('Server returned ' + uploadRes.status);
+			// Task B: Direct multipart form backend upload stream
+			try {
+				var formData = new FormData();
+				formData.append('file', blob, fullFileName);
+				formData.append('fileName', fullFileName);
+				formData.append('folder', 'projects');
+
+				var uploadRes = await fetch('/api/storage/upload', {
+					method: 'POST',
+					body: formData,
+				});
+
+				if (uploadRes.ok) {
+					var data = await uploadRes.json();
+					publicUrl = data.url;
+				}
+			} catch (uploadErr) {
+				console.warn('Direct project upload stream failed, attempting presigned fallback:', uploadErr);
 			}
 
-			var data = await uploadRes.json();
-			var uploadUrl = data.uploadUrl;
-			var publicUrl = data.publicUrl;
+			// Task C fallback: Presigned URL PUT
+			if (!publicUrl) {
+				var presignRes = await fetch('/api/storage/upload-url', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						fileName: fullFileName,
+						fileType: 'application/json',
+						folder: 'projects',
+					}),
+				});
 
-			alertify.message('Uploading project to AWS S3...');
-			var putRes = await fetch(uploadUrl, {
-				method: 'PUT',
-				headers: { 'Content-Type': 'application/json' },
-				body: blob,
-			});
+				if (!presignRes.ok) {
+					throw new Error('Presigned URL request failed with status ' + presignRes.status);
+				}
 
-			if (!putRes.ok) {
-				throw new Error('S3 upload failed with status ' + putRes.status);
+				var presignData = await presignRes.json();
+				var putRes = await fetch(presignData.uploadUrl, {
+					method: 'PUT',
+					headers: { 'Content-Type': 'application/json' },
+					body: blob,
+				});
+
+				if (!putRes.ok) {
+					throw new Error('S3 upload failed with status ' + putRes.status);
+				}
+				publicUrl = presignData.publicUrl;
 			}
 
 			alertify.success('Project saved to Cloud successfully!');
@@ -219,8 +271,8 @@ class File_cloud_class {
 				var isJson = file.key.endsWith('.json');
 				var dateStr = file.lastModified ? new Date(file.lastModified).toLocaleDateString() : '';
 				var sizeKb = file.size ? (Math.round(file.size / 1024) + ' KB') : '';
-				var keySafe = encodeURIComponent(file.key);
-				var urlSafe = encodeURIComponent(file.url);
+				var displayName = file.key.replace(/^projects\//, '').replace(/^uploads\//, '');
+				displayName = displayName.replace(/_([0-9]{13})\./, '.');
 
 				html += '<div style="background:#18181b;border:1px solid #27272a;border-radius:8px;padding:12px;display:flex;flex-direction:column;justify-content:space-between;transition:border-color 0.2s;" onmouseover="this.style.borderColor=\'#3b82f6\'" onmouseout="this.style.borderColor=\'#27272a\'">';
 				
@@ -238,7 +290,7 @@ class File_cloud_class {
 
 				// Meta info
 				html += '<div style="margin-bottom:10px;">';
-				html += '<div style="font-size:12px;font-weight:600;color:#f4f4f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="' + file.key + '">' + file.key.replace(/^projects\//, '') + '</div>';
+				html += '<div style="font-size:12px;font-weight:600;color:#f4f4f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="' + file.key + '">' + displayName + '</div>';
 				html += '<div style="font-size:11px;color:#71717a;margin-top:2px;">' + sizeKb + ' • ' + dateStr + '</div>';
 				html += '</div>';
 
@@ -267,22 +319,23 @@ class File_cloud_class {
 		setTimeout(function () {
 			var openButtons = document.querySelectorAll('.btn-cloud-open');
 			openButtons.forEach(function (btn) {
-				btn.addEventListener('click', function () {
+				btn.addEventListener('click', async function () {
 					var url = btn.getAttribute('data-url');
 					var isJson = btn.getAttribute('data-is-json') === 'true';
 					_this.POP.hide();
 
 					alertify.message('Loading from Cloud...');
 					if (isJson) {
-						fetch(url)
-							.then(r => r.json())
-							.then(data => {
-								app.FileOpen.load_json(data, false);
-								alertify.success('Project loaded successfully!');
-							})
-							.catch(err => {
-								alertify.error('Failed to load project: ' + err.message);
-							});
+						try {
+							var res = await fetch(url);
+							if (!res.ok) throw new Error('HTTP ' + res.status);
+							var data = await res.json();
+							await app.FileOpen.load_json(data, false);
+							alertify.success('Project loaded successfully!');
+						} catch (err) {
+							console.error('Load project error:', err);
+							alertify.error('Failed to load project: ' + err.message);
+						}
 					} else {
 						app.FileOpen.open_resource(url);
 					}

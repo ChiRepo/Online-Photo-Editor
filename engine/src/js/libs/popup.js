@@ -1,7 +1,7 @@
 /**
  * user dialogs library
  * 
- * @author ViliusL
+ * @author GIMP Lab Team
  * 
  * Usage:
  * 

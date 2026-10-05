@@ -101,6 +101,7 @@ export interface FileMetadata {
 export interface StorageAdapter {
   getUploadUrl(key: string, contentType: string): Promise<string>;
   getDownloadUrl(key: string): Promise<string>;
+  upload?(key: string, data: any, contentType?: string): Promise<string | void>;
   delete(key: string): Promise<void>;
   list(prefix: string): Promise<FileMetadata[]>;
 }
