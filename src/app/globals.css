@@ -29,3 +29,13 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+/* Completely hide Next.js dev indicator bubble */
+nextjs-portal,
+[data-nextjs-dev-tools-button],
+[data-nextjs-toast] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
