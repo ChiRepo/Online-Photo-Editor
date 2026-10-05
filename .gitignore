@@ -1,0 +1,5 @@
+node_modules
+.next
+.env*.local
+engine/node_modules
+public/engine/*.map

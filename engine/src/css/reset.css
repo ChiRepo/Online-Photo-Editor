@@ -1,0 +1,173 @@
+:root {
+	/* GIMP Lab - Dark Pro Theme (Option A) */
+	--background: #141519;
+	--text-color: #e6e8ec;
+	--text-color-muted: #9aa0aa;
+	--text-color-red: #f87171;
+	--text-color-green: #4ade80;
+	--text-color-blue: #60a5fa;
+	--link-color: #38bdf8;
+	--section-background-color: #1b1d22;
+	--area-background-color: #1b1d22;
+	--block-background-color: #1b1d22;
+	--header-background-color: #22252c;
+	--button-background-color: #272a33;
+	--button-background-color-hover: #3b82f6;
+	--button-background-color-active: #2563eb;
+	--button-shadow-color: rgba(0, 0, 0, 0.4);
+	--button-text-color-active: #ffffff;
+	--button-border-radius: 6px;
+	--button-toggle-background-color: #323640;
+	--button-toggle-background-color-hover: #3b82f6;
+	--input-background-color: #141519;
+	--input-background-color-hover: #1f2229;
+	--input-text-color: #f1f5f9;
+	--input-border-color: #2e333d;
+	--input-border-color-active: #3b82f6;
+	--input-border-radius: 6px;
+	--input-group-border-color: #2a2d35;
+	--menu-background-color: #16181d;
+	--menu-icons-filter: invert(1);
+	--menu-icons-filter-active: none;
+	--menu-text-color: #cbd5e1;
+	--menu-dropdown-hover-background-color: #2563eb;
+	--menu-dropdown-border-color: #3b82f6;
+	--number-input-arrow-width: 2rem;
+	--background-color-active: #3b82f6;
+	--background-color-hover: #2b2f3a;
+	--text-color-active: #ffffff;
+	--border-color: #2a2d35;
+	--scrollbar-track-color: #141519;
+	--scrollbar-thumb-color: #272a33;
+	--mobile-menu-toggle-filter: invert(1);
+}
+
+*{
+	box-sizing: border-box;
+	background-repeat: no-repeat;
+}
+html {
+	font-size: 10px; /* Base is 10px for easy REM calculation */
+	overscroll-behavior: none;
+}
+body{
+	margin: 0;
+	padding: 30px 0 0 0;
+	background-color: var(--background);
+	background: var(--background);
+	font-size: 1.3rem;
+	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+	color: var(--text-color);
+	line-height: 1.4;
+	font-weight: normal;
+	overflow: hidden;
+	overscroll-behavior-x: none;
+}
+canvas{
+	outline: none;
+	-webkit-touch-callout: none;
+	-ms-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+img{
+	border: none;
+}
+td, th{
+	vertical-align:top;
+}
+table{
+	border: 0;
+	margin: 0;
+	padding: 0;
+	vertical-align: baseline;
+	border-collapse: collapse;
+	border-spacing: 0;
+	width:100%;
+}
+hr{
+	border-color: var(--border-color);
+	border-bottom: 0;
+}
+input[type="text"], select, input[type="number"], textarea{
+	background: var(--input-background-color);
+	border: 1px solid var(--input-border-color);
+	border-radius: var(--input-border-radius);
+	color: var(--input-text-color);
+	padding: 5px 8px;
+	font-size: 12px;
+	outline: none;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+input[type="text"]:focus, select:focus, input[type="number"]:focus, textarea:focus{
+	border-color: var(--input-border-color-active);
+	box-shadow: 0 0 0 1px var(--input-border-color-active);
+}
+input:disabled {
+	opacity: 0.35;
+}
+select{
+	padding: 4px 6px;
+}
+input[type="range"]{
+	margin-left: 0;
+	width:100%;
+	accent-color: #3b82f6;
+}
+button, input[type="button"]{
+	border-radius: var(--button-border-radius);
+	box-shadow: 0 1px 2px 0 var(--button-shadow-color);
+	cursor: pointer;
+	border: 1px solid var(--border-color);
+	background-color: var(--button-background-color);
+	color: var(--text-color);
+	font-family: inherit;
+	font-size: 12px;
+	padding: 4px 8px;
+	transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+button:hover, input[type="button"]:hover{
+	background-color: var(--button-background-color-hover);
+	border-color: #3b82f6;
+	color: #ffffff;
+}
+button:disabled, input[type="button"]:disabled{
+	visibility:hidden;
+}
+button[aria-pressed="true"], input[type="button"][aria-pressed="true"]{
+	background-color: var(--button-background-color-active);
+	color: #ffffff;
+	border-color: #3b82f6;
+}
+label{
+	display: inline-block;
+	vertical-align: top;
+	margin-top: 7px;
+	color: var(--text-color-muted);
+	font-size: 12px;
+}
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track-piece {
+    background: var(--scrollbar-track-color);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    border-radius: 4px;
+}
+@supports (zoom:2) {
+	input[type="radio"],  input[type=checkbox]{
+		zoom: 1.3;
+		accent-color: #3b82f6;
+	}
+}
+@supports not (zoom:2) {
+	input[type="radio"],  input[type=checkbox]{
+		transform: scale(1.3);
+		transform-origin: left center;
+		margin: 6px 10px 6px 0;
+		accent-color: #3b82f6;
+	}
+}

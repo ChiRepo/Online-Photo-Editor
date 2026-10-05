@@ -1,0 +1,49 @@
+{
+  "name": "gimp-lab",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm run engine:build && next dev",
+    "build": "npm run engine:build && next build",
+    "start": "next start",
+    "engine:build": "webpack --config engine/webpack.config.js --mode production",
+    "engine:dev": "webpack --config engine/webpack.config.js --mode development --watch"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1137.0",
+    "@aws-sdk/s3-request-presigner": "^3.1137.0",
+    "alertifyjs": "^1.13.1",
+    "blueimp-canvas-to-blob": "^3.28.0",
+    "exif-js": "^2.3.0",
+    "file-saver": "^2.0.5",
+    "fuzzysort": "^1.1.4",
+    "gif.js.optimized": "^1.0.1",
+    "hermite-resize": "github:viliusle/Hermite-resize",
+    "idb": "^8.0.3",
+    "jquery": "^3.5.1",
+    "lucide-react": "^1.47.0",
+    "next": "16.3.5",
+    "pica": "^7.0.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "semver-compare": "^1.0.0",
+    "uuid": "^14.0.2",
+    "webfontloader": "^1.6.28"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.5",
+    "@babel/plugin-transform-runtime": "^7.14.5",
+    "@babel/preset-env": "^7.14.5",
+    "@babel/runtime": "^7.14.5",
+    "@types/node": "^20.19.43",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/uuid": "^10.0.0",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^5.2.6",
+    "style-loader": "^2.0.0",
+    "typescript": "^5",
+    "webpack": "^5.106.2",
+    "webpack-cli": "^5.1.4"
+  }
+}
