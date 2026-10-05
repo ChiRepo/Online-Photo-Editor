@@ -141,15 +141,17 @@ body .sp-preview{
 /* ========== header ======================================================== */
 
 
+
 .logo {
 	position: relative;
-	display: inline-block;
-	height: 30px;
-	padding: 6px 14px 6px 36px;
+	display: inline-flex;
+	align-items: center;
+	height: 32px;
+	padding: 0 14px 0 38px;
 	text-decoration: none;
 	font-weight: 700;
-	font-size: 14px;
-	letter-spacing: -0.3px;
+	font-size: 15px;
+	letter-spacing: -0.4px;
 	color: #ffffff;
 	font-family: inherit;
 }
@@ -157,15 +159,16 @@ body .sp-preview{
 	position: absolute;
 	content: "";
 	left: 8px;
-	top: 6px;
-	width: 18px;
-	height: 18px;
-	background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
-	border-radius: 4px;
-	box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+	top: 5px;
+	width: 22px;
+	height: 22px;
+	background: url("/images/gimplab-logo.svg") no-repeat center center;
+	background-size: contain;
+	filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.5));
+	transition: transform 0.2s ease;
 }
 .logo:hover:after {
-	transform: scale(1.05);
+	transform: scale(1.1);
 }
 .about-logo{
 	margin-left:22%;

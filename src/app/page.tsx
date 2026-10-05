@@ -42,7 +42,7 @@ export default function LandingPage() {
       {/* Top Navbar */}
       <header className={styles.header}>
         <div className={styles.logoArea}>
-          <div className={styles.logoIcon}>G</div>
+          <img src="/images/gimplab-logo.svg" alt="GIMP Lab Logo" width="32" height="32" style={{ borderRadius: 8, filter: "drop-shadow(0 0 8px rgba(59, 130, 246, 0.5))" }} />
           <span className={styles.logoText}>GIMP Lab</span>
         </div>
         <div className={styles.navActions}>
