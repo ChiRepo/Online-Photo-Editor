@@ -1,7 +1,7 @@
 import { openDB, DBSchema, IDBPDatabase } from 'idb';
 import type { StorageAdapter, FileMetadata } from '@/types';
 
-interface GimpCloudDBSchema extends DBSchema {
+interface GimpLabDBSchema extends DBSchema {
   files: {
     key: string;
     value: {
@@ -15,10 +15,10 @@ interface GimpCloudDBSchema extends DBSchema {
 }
 
 export class LocalStorageAdapter implements StorageAdapter {
-  private dbPromise: Promise<IDBPDatabase<GimpCloudDBSchema>>;
+  private dbPromise: Promise<IDBPDatabase<GimpLabDBSchema>>;
 
   constructor() {
-    this.dbPromise = openDB<GimpCloudDBSchema>('gimpcloud-storage', 1, {
+    this.dbPromise = openDB<GimpLabDBSchema>('gimplab-storage', 1, {
       upgrade(db) {
         db.createObjectStore('files', { keyPath: 'key' });
       },
