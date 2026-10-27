@@ -1,0 +1,9 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Cloud uploads are disabled until authenticated saving is implemented.
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}

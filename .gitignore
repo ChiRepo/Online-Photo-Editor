@@ -1,0 +1,14 @@
+*~
+plan/
+/target
+target/
+/dist/*
+!/dist/web
+/corpus
+/log
+/secrets
+/temp
+/book/output
+/craft-fonts
+*.log
+__pycache__/
