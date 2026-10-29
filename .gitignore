@@ -12,3 +12,10 @@ target/
 /craft-fonts
 *.log
 __pycache__/
+
+# Firebase CLI deployment cache and local credentials
+.firebase/
+.env
+.env.*
+!.env.example
+*service-account*.json

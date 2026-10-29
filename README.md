@@ -1,25 +1,50 @@
-# GIMPLab
+# GIMPLab — Online Photo Editor
 
 A browser image editor for a PBL and semester project, based on [PhotoCraft](https://github.com/storytold/photocraft).
 
-The original Rust image-processing engine is PhotoCraft by the ArtCraft team and contributors. This fork adds GIMPLab web branding, an original camera icon, Firebase Hosting configuration, and restrictive cloud-data rules. Original engine functionality and file formats are retained. This is an independent modified project.
+**Website:** https://gimplab.web.app · **Source:** https://github.com/ChiRepo/Online-Photo-Editor · **Credits:** https://gimplab.web.app/credits.html
 
-## Build and deploy
+## What this project contains
 
-Rust 1.95 or newer, Trunk, and Firebase CLI are required. The tested toolchain was Rust 1.99.0 with Trunk 0.21.14.
+The `main` branch contains a Rust engine and egui interface compiled to WebAssembly. GIMPLab adds web branding, an original camera icon, Firebase Hosting configuration, and restrictive cloud-data rules. The separate `nextjs-version` branch is not part of this deployment workflow.
+
+Open local images, edit them with the available tools, and export downloads. The application has no implemented account or cloud-saving workflow. Upstream is early alpha; not every tool, file format, browser, or large image has been validated for this fork.
+
+## Run locally without rebuilding
+
+Prerequisite: Python 3. From the repository root:
+
+```sh
+python3 -m http.server 8765 --bind 127.0.0.1 --directory dist/web
+```
+
+Open http://127.0.0.1:8765/. Stop with Ctrl+C. The checked-in `dist/web` snapshot contains the compiled editor.
+
+## Build after source changes
+
+Install Rust 1.95+, the wasm32 target, Trunk, and Python 3. The initial build was tested with Rust 1.99.0 and Trunk 0.21.14.
 
 ```sh
 rustup target add wasm32-unknown-unknown
 cd apps/photocraft-web
 env -u NO_COLOR trunk build --release
 cd ../..
-firebase deploy --only hosting,firestore:rules --project gimplab
+python3 scripts/prepare-gimplab-web.py
 ```
 
-The web build is written to `dist/web`. Include LICENSE-MIT, LICENSE-APACHE, NOTICE and ATTRIBUTION.md in the published folder. The delivered deployment bundle includes these notices.
+Run the local preview and test import, editing, and export before publishing. See [development](docs/GIMPLAB-DEVELOPMENT.md) for the code map and checks.
 
-Firestore rules deny client reads and writes because the current version processes local files. Storage has not been provisioned. The storage.rules file is a dormant deny-all template; enabling cloud saving requires implementing authenticated ownership rules first.
+## Deploy
 
-Open local files in the browser and export edited images as downloads. No account or cloud image upload is required. This editor is based on an early-alpha upstream application; the smoke tests do not verify every tool or file format.
+Prerequisites: Firebase CLI and a signed-in account with access to `gimplab`.
 
-Upstream documentation remains under docs/. Restricted ArtCraft brand images are omitted from the distributed source archive. Original notices and credits are preserved.
+```sh
+firebase login
+firebase deploy --only hosting --project gimplab
+```
+
+See [deployment](docs/GIMPLAB-DEPLOYMENT.md) for rule deployment, verification, and rollback. See [project status](PROJECT-STATUS.md) for validation scope and [changelog](CHANGELOG.md) for maintenance history.
+
+## Attribution
+
+The editing engine is PhotoCraft by the ArtCraft team and contributors, licensed under MIT OR Apache-2.0. GIMPLab is an independent modified project. Preserve LICENSE-MIT, LICENSE-APACHE, NOTICE, and ATTRIBUTION.md. Original assets retain their licenses. Imported documentation under docs/ describes the upstream baseline unless marked otherwise; upstream feature and parity claims are not fresh GIMPLab test results.

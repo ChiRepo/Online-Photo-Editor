@@ -1,28 +1,20 @@
-# GIMPLab Firebase setup
+# GIMPLab project status
 
-Firebase project: `gimplab`
-Hosting site: `gimplab`
-Expected production URL: https://gimplab.web.app
+Updated: 2026-10-29.
 
-## Verified cloud configuration
+## Current scope
 
-- Project access verified through the existing Firebase CLI login.
-- Firestore `(default)` is provisioned in `asia-south1`.
-- Deny-all Firestore rules compiled and were released successfully.
-- Anonymous Firestore read returned HTTP 403 with PERMISSION_DENIED.
-- Firebase Storage has NOT been provisioned. Its API was enabled by the attempted rule deployment, but the deployment stopped because no bucket exists. The supplied storageBucket string does not prove that a bucket exists.
-- No Authentication providers, cloud image uploads, database writes, or Analytics SDK were added. The initial editor uses local files and browser downloads.
+- Repository: https://github.com/ChiRepo/Online-Photo-Editor, branch `main` (Rust/WebAssembly).
+- Firebase project/site: `gimplab`; website: https://gimplab.web.app.
+- Local files and browser exports are implemented. Accounts and cloud saving are not implemented.
+- Firestore source rules deny all client reads and writes. Storage rules are a dormant template; Storage was unprovisioned at the initial setup and has not been provisioned by this maintenance task.
 
-The supplied Firebase web configuration is not an administrator credential. Static Hosting and this local editor do not require Firebase JS SDK initialization. The CLI's signed-in session supplies deployment authorization.
+## Historical validation — 2026-10-12
 
-## Source and validation
+The initial branded build passed release compilation, formatting, dependency layering, all-target code diagnostics, 24 wasm crate/feature checks, and 9 targeted icon/link/credit tests. Brave smoke testing covered startup, PNG import, brush editing, PNG export, and inspection of the saved image. Firestore rules were deployed and an anonymous read returned 403. These are historical results, not fresh testing of every feature.
 
-GIMPLab is deployed at https://gimplab.web.app and its startup was visually verified in Brave.
+## Maintenance — 2026-10-29
 
-Passed checks: release WebAssembly build; formatting; dependency layering; all-target code diagnostics; wasm compatibility checks for 24 crate/feature combinations; 9 targeted icon, Help-link, and contributor-credit tests.
+The existing source and compiled snapshot were already on GitHub `main` at `a431dde`. This update clarifies fork instructions, local preview, source builds, deployment, rules, and attribution. It adds a repeatable web-bundle preparation script. Rust editing behavior is unchanged and the compiled editor is reused; no fresh Rust compilation or broad browser compatibility claim is made.
 
-Browser smoke test on the same build: opened the original camera PNG, applied a brush stroke, exported a PNG, and inspected the saved output. Live HTML and Wasm returned HTTP 200; Wasm has application/wasm and immutable caching. This is a smoke test, not comprehensive validation of all upstream tools, formats, browsers, or large-image performance.
-
-Published license notices and credits: https://gimplab.web.app/credits.html
-
-Download GIMPLab-source.zip for the modified Rust source. GIMPLab-deployment.zip contains the compiled site and configuration for redeployment without rebuilding Rust.
+Push and Hosting release results are recorded in the task completion message. See CHANGELOG.md and docs/GIMPLAB-DEPLOYMENT.md for the release procedure.

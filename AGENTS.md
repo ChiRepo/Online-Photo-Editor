@@ -1,3 +1,18 @@
+# GIMPLab fork instructions
+
+This repository is ChiRepo/Online-Photo-Editor. The `main` branch contains the GIMPLab Rust/WebAssembly editor. Preserve other remote branches, including `nextjs-version`; do not merge or replace them without a request.
+
+- Use **GIMPLab** for this fork's product branding. Keep `photocraft-*` crate names, command IDs, and file formats stable. This overrides the upstream product-name convention below.
+- Start with README.md, docs/GIMPLAB-DEVELOPMENT.md, docs/GIMPLAB-DEPLOYMENT.md, and PROJECT-STATUS.md.
+- Firebase project and Hosting site are `gimplab`. Deploy Hosting only unless cloud-rule changes are explicitly in scope.
+- Editing is browser-local. Do not claim accounts, cloud saving, or authenticated uploads exist. Do not initialize billable services merely to host the editor.
+- `dist/web` is intentionally tracked as a deployable snapshot. For source changes, rebuild with Trunk, then run `python3 scripts/prepare-gimplab-web.py` to restore the favicon, credits, and required notices.
+- Never commit credentials, Firebase CLI state, private samples, or build caches. Preserve licenses and attribution. Never restore restricted ArtCraft logo assets to the published fork.
+- For documentation-only work, verify links, commands, and deployment files. Run the relevant upstream tests for changes to Rust code; no Rust rebuild is required merely to update documentation.
+- Upstream documents and metrics below describe the imported PhotoCraft baseline, not fresh validation of GIMPLab.
+
+## Upstream contributor guide (retained for engine work)
+
 # AGENTS.md: guide for AI agents and contributors
 
 PhotoCraft is an open-source, native, Photoshop-comparable image editor written in **Rust only** (no JavaScript or TypeScript). **No Tauri, Electron or webview shells:** the desktop app is native egui/eframe on wgpu, and the web build is the same Rust compiled to WebAssembly (trunk + wasm-bindgen). Never add Tauri (or any webview/JS UI framework) as a dependency, build step or packaging target. The product name is always written **PhotoCraft** (`{Function}Craft` in PascalCase, like its siblings ArtCraft, ArtCraftX, DesignCraft, VectorCraft, EffectCraft, FilmCraft, LightCraft, PdfCraft) in user-facing text: UI, window titles, About, installers, release names, docs prose. Machine names stay lowercase: crates (`photocraft-*`), binaries, file names, ids (`ai.storyteller.photocraft`). Standards and learnings shared across the crafting apps live in `../craftrules` (read its `README.md`; the repository is not public — outside contributors should ask a maintainer for the standards relevant to their change). Contribute reusable learnings there; shared Rust components live in [storytold/craft-libs](https://github.com/storytold/craft-libs) and are pinned by immutable git revision. UI libraries stay at L6. The goal is 1:1 Photoshop parity (same menus, shortcuts, behaviour and file fidelity) with better performance, and every feature drivable by agents. Read this file first, then `docs/`.

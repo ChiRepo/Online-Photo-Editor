@@ -1,3 +1,5 @@
+> For GIMPLab Firebase Hosting, use [the fork deployment guide](../../docs/GIMPLAB-DEPLOYMENT.md). Run `python3 scripts/prepare-gimplab-web.py` from the repository root after a Trunk build to restore the fork credits, favicon, and license notices.
+
 # Hosting PhotoCraft for the web
 
 `photocraft-web-<version>.zip` (from the GitHub release, or `packaging/web/package.sh`) holds a

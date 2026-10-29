@@ -1,3 +1,5 @@
+> GIMPLab fork: report fork-specific issues to the owner of https://github.com/ChiRepo/Online-Photo-Editor. Do not publish credentials or private image samples in public issues. The current browser editor has no cloud-saving workflow; Firestore client access is denied. The policy below describes the imported engine and its broader native/automation surface.
+
 # Security Policy
 
 PhotoCraft processes complex document and image formats and exposes CLI, JSON control, and MCP automation. Treat files, paths, metadata, automation requests, and command parameters as potentially malicious.

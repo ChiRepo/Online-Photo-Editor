@@ -1,3 +1,5 @@
+> This is the imported PhotoCraft roadmap. Its estimates and parity metrics are historical upstream claims. For GIMPLab scope and remaining work, read PROJECT-STATUS.md and docs/GIMPLAB-DEVELOPMENT.md.
+
 # PhotoCraft roadmap
 
 **Stage: alpha** · next: beta, ~30 points (ready for real work ~45% → ~75%, with reliable PSD) and ~1,100–1,800 h away

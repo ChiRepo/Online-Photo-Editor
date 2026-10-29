@@ -1,3 +1,5 @@
+> For the GIMPLab web fork, start with [GIMPLab development](GIMPLAB-DEVELOPMENT.md) and [Firebase deployment](GIMPLAB-DEPLOYMENT.md). The guide below is retained upstream documentation, including native-app workflows.
+
 # Development guide
 
 ## Prerequisites
